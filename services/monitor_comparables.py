@@ -60,10 +60,12 @@ def comparacion_olimpica_a_jumbo(id_producto, resultado):
         mensaje = ""
         # Si el producto que tiene descuento está en la lista de artículos comparables, revisa si el precio en Jumbo es menor que el de Olímpica hoy (en general)
         if (id_producto == producto_comp["olimpica"]):
-            item_jumbo = info_producto_jumbo(producto_comp["jumbo"])
-            precio_item_jumbo = item_jumbo["precio_hoy"]
-            if resultado["precio_hoy"] > precio_item_jumbo:
-                mensaje += f"⚠️ Ojo: este producto hoy cuesta menos en Jumbo (${precio_item_jumbo:,.0f})."
-            break
+            # Si el producto está en los comparables que aplican para Jumbo, ejecuta el siguiente bloque
+            if (producto_comp["jumbo"] != 0):
+                item_jumbo = info_producto_jumbo(producto_comp["jumbo"])
+                precio_item_jumbo = item_jumbo["precio_hoy"]
+                if resultado["precio_hoy"] > precio_item_jumbo:
+                    mensaje += f"⚠️ Ojo: este producto hoy cuesta menos en Jumbo (${precio_item_jumbo:,.0f})."
+                break
 
     return mensaje
