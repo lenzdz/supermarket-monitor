@@ -54,7 +54,7 @@ De esta forma, además de informar una oferta, el sistema puede indicar si el mi
 
 ### Ejemplo:
 
-
+![Captura de pantalla que muestra el resultado de la ejecución para Cruz Verde del proyecto 'Supermarket Monitor'](img/funcionamiento-cruzverde.png)
 
 ## Tecnologías utilizadas
 
