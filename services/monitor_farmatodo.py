@@ -34,14 +34,13 @@ def monitor_farmatodo(diccionario_productos_cruzverde):
             nombre = resultado["nombre"]
             precio_pleno = resultado["precio_pleno"]
             precio_hoy = resultado["precio_hoy"]
-            precio_con_descuento = resultado["precio_con_descuento"]
+            #precio_con_descuento = resultado["precio_con_descuento"]
 
             mensaje += (
                 f"-------------------------------------------\n"
                 f"{producto['emoji']} **{nombre}**\n"
                 f"**Precio normal:** ${precio_pleno:,.0f}\n"
                 f"**Precio actual:** ${precio_hoy:,.0f}\n"
-                f"**Con tarjeta Olímpica:** ${precio_con_descuento:,.0f}\n"
             )
 
             enviar_mensaje_canal_farmatodo(mensaje)
