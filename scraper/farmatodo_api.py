@@ -13,10 +13,7 @@ BASE_URL = (
 
 
 def obtener_producto(
-    id_producto,
-    id_store=26,
-    ciudad="BOG",
-    delivery_type="EXPRESS",
+    id_producto
 ):
     """
     Consulta un producto en la API de Farmatodo.
@@ -43,7 +40,7 @@ def obtener_producto(
 
     params = {
         "source": "WEB",
-        "idItem": "1003627",
+        "idItem": id_producto,
         "idCustomerWebSafe": "ahZzfnN0dW5uaW5nLWJhc2UtMTY0NDAyci4LEgRVc2VyIiRlNWQzMzA0Yi1iMjBiLTRhMWItODExYS1jMjM3ZWFhYmRiZTQM",
         "idStoreGroup": 26,
         "nearbyStores": "26,20,67,3,85,24,31,88,81,83,89,15,54,1122",
