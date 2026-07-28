@@ -33,5 +33,6 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           JUMBO_DISCORD_WEBHOOK: ${{ secrets.JUMBO_DISCORD_WEBHOOK }}
           CRUZVERDE_DISCORD_WEBHOOK: ${{ secrets.CRUZVERDE_DISCORD_WEBHOOK }}
+          FARMATODO_DISCORD_WEBHOOK: ${{ secrets.FARMATODO_DISCORD_WEBHOOK }}
         run: |
           python main.py

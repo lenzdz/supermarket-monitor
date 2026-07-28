@@ -120,11 +120,11 @@ def obtener_producto(product_id):
         timeout=30
     )
 
-    print("URL generada:")
-    print(respuesta.url)
-    print()
+    # print("URL generada:")
+    # print(respuesta.url)
+    # print()
 
-    print("Status:", respuesta.status_code)
+    # print("Status:", respuesta.status_code)
 
     return respuesta.json()
 
