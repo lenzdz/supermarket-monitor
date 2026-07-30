@@ -60,7 +60,7 @@ def monitor_cruzverde():
                 f"🎉 Hoy hay {len(registros)} productos en oferta ({fecha_hoy}) 🎉 \n"
             )
 
-        enviar_mensaje_canal_cruzverde(mensaje)
+        enviar_mensaje_canal_cruzverde(mensaje_final)
 
     finally:
 
