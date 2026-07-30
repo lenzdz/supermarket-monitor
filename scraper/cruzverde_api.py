@@ -18,7 +18,7 @@ class CruzVerdeClient:
         self.page = None
 
     def iniciar(self):
-        """Inicia Playwright y abre el navegador."""
+        """Inicia Playwright y crea la sesión de Cruz Verde."""
 
         self.playwright = sync_playwright().start()
 
@@ -29,6 +29,14 @@ class CruzVerdeClient:
         self.context = self.browser.new_context()
 
         self.page = self.context.new_page()
+
+        # Crear la sesión una sola vez
+        self.page.goto(
+            "https://www.cruzverde.com.co/",
+            wait_until="networkidle"
+        )
+
+        self.page.wait_for_timeout(5000)
 
     def cerrar(self):
         """Cierra el navegador."""
@@ -41,7 +49,6 @@ class CruzVerdeClient:
 
     def obtener_producto(
         self,
-        url_producto,
         producto_id,
         inventory_id="COCV_zona64"
     ):
@@ -50,9 +57,6 @@ class CruzVerdeClient:
 
         Parámetros
         ----------
-        url_producto : str
-            URL completa del producto.
-
         producto_id : str
             Ejemplo:
             COCV_146476
@@ -65,22 +69,6 @@ class CruzVerdeClient:
         dict
             JSON completo devuelto por la API.
         """
-
-        # Abrir la página para generar la cookie connect.sid
-        self.page.goto(
-            url_producto,
-            wait_until="domcontentloaded"
-        )
-
-        # Esperar un momento para que la sesión termine de crearse
-        self.page.wait_for_timeout(2000)
-
-        respuesta = self.context.request.get(
-            f"{self.API_URL}/{producto_id}",
-            params={
-                "inventoryId": inventory_id
-            }
-        )
 
         respuesta = self.context.request.get(
             f"{self.API_URL}/{producto_id}",

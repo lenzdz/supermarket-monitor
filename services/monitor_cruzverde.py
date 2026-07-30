@@ -27,7 +27,6 @@ def monitor_cruzverde():
 
             mensaje = ""
             registro = cliente.obtener_producto(
-                url_producto = producto["url"],
                 producto_id = producto["id"]
             )
 
@@ -47,6 +46,21 @@ def monitor_cruzverde():
             mensaje += comparacion_cruzverde_a_olimpica(producto["id"], precio_con_descuento)
             
             enviar_mensaje_canal_cruzverde(mensaje)
+
+        if (len(registros) == 0):
+            mensaje_final = f"-------------------------------------------\n Hoy no hay productos en oferta 🙁"
+        elif (len(registros) == 1):
+            mensaje_final = (
+                f"-------------------------------------------\n"
+                f"🎉 Hoy hay {len(registros)} producto en oferta ({fecha_hoy}) 🎉 \n"
+            )
+        else:
+            mensaje_final = (
+                f"-------------------------------------------\n"
+                f"🎉 Hoy hay {len(registros)} productos en oferta ({fecha_hoy}) 🎉 \n"
+            )
+
+        enviar_mensaje_canal_cruzverde(mensaje)
 
     finally:
 
