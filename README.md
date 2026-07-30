@@ -1,5 +1,5 @@
 > [!TIP]
-> This README file is writen in Spanish. Read this project's information in English following this link.
+> This README file is writen in Spanish. Read this project's information in English following [this link](README_ENG.md).
 
 # Monitor de Supermercados
 
