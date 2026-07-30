@@ -1,5 +1,5 @@
 > [!TIP]
-> This README file is writen in Spanish. Read this project's information in English following this link.
+> This README file is writen in Spanish. Read this project's information in English following [this link](README_ENG.md).
 
 # Monitor de Supermercados
 
@@ -38,7 +38,11 @@ olimpica-monitor/
 
 🛒 Jumbo
 
+🛒 Makro
+
 💊 Cruz Verde
+
+💊 Farmatodo
 
 ## Funcionamiento
 
@@ -61,6 +65,7 @@ De esta forma, además de informar una oferta, el sistema puede indicar si el mi
 - Python 3
 - Requests
 - Playwright (cuando es necesario obtener información protegida por sesión)
+- Beautiful Soup
 - Discord Webhooks
 - GitHub Actions
 
