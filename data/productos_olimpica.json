@@ -1,5 +1,15 @@
 [
     {
+        "id": 2242750,
+        "emoji": "🌸",
+        "nombre_personalizado": "Agua Micelar Nivea Desmaquillante Agua de Rosas 100 Ml"
+    },
+    {
+        "id": 2118918,
+        "emoji": "🌸",
+        "nombre_personalizado": "Agua Micelar Nivea Desmaquillante Agua de Rosas 400 Ml"
+    },
+    {
         "id": 938238,
         "emoji": "⌬",
         "nombre_personalizado": "Alka-Seltzer Tabletas Efervescentes Caja X14"
@@ -98,6 +108,21 @@
         "id": 1149613,
         "emoji": "🐷",
         "nombre_personalizado": "Jamón Zenú Sandwich 450 G x22 Unds"
+    },
+    {
+        "id": 2312961,
+        "emoji": "🍼",
+        "nombre_personalizado": "LECHE ALPINA DESLACTOSADA 1.1L 6X5"
+    },
+    {
+        "id": 1232541,
+        "emoji": "🍼",
+        "nombre_personalizado": "Leche Alquería Deslactosada 900 Ml X6 Unds"
+    },
+    {
+        "id": 1191288,
+        "emoji": "🍼",
+        "nombre_personalizado": "Leche Alquería Deslactosada 1,1 Lt X6 Unds"
     },
     {
         "id": 2256647,
@@ -230,6 +255,11 @@
         "nombre_personalizado": "Té Hindú 80 G X50 Unds"
     },
     {
+        "id": 2242750,
+        "emoji": "🌸",
+        "nombre_personalizado": "Agua Micelar Nivea Desmaquillante Agua de Rosas 100 Ml"
+    },
+    {
         "id": 822946,
         "emoji": "🌸",
         "nombre_personalizado": "Toalla Higiénica Nosotras Plus Clásica X30 Unds"
@@ -243,6 +273,21 @@
         "id": 927656,
         "emoji": "🍞",
         "nombre_personalizado": "Tortilla Bimbo Mediana 450 G X15 Unds"
+    },
+    {
+        "id": 2288372,
+        "emoji": "🥛",
+        "nombre_personalizado": "Yogurt Alpina Griego Natural 500 G"
+    },
+    {
+        "id": 2288373,
+        "emoji": "🥛",
+        "nombre_personalizado": "Yogurt Alpina Griego Natural 1000 G"
+    },
+    {
+        "id": 2323458,
+        "emoji": "🥛",
+        "nombre_personalizado": "Yogurt Alpina Griego Natural 1000 G (Botella)"
     },
     {
         "id": 1392602,
