@@ -105,5 +105,10 @@ def info_producto_olimpica(id_producto):
     
     except TypeError:
 
-        print("Error en API Olímpica: no se encontró un producto con ID " + str(id_producto))
+        print("TypeError en API Olímpica: no se encontró un producto con ID " + str(id_producto))
         return None
+
+    except KeyError:
+    
+            print("KeyError en API Olímpica: no se encontró un producto con ID " + str(id_producto))
+            return None
