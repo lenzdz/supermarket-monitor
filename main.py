@@ -7,6 +7,8 @@ from services.monitor_cruzverde import monitor_cruzverde
 from services.monitor_farmatodo import monitor_farmatodo
 from services.monitor_makro import monitor_makro
 
+from notifiers.discord import enviar_mensaje_canal_errores
+
 diccionario_productos_cruzverde = monitor_cruzverde()
 monitor_olimpica(diccionario_productos_cruzverde)
 monitor_jumbo()

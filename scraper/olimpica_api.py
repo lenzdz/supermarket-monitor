@@ -2,6 +2,8 @@ import base64
 import json
 import requests
 
+from notifiers.discord import enviar_mensaje_canal_errores
+
 BASE_URL = "https://www.olimpica.com/_v/segment/graphql/v1"
 
 
@@ -105,10 +107,16 @@ def info_producto_olimpica(id_producto):
     
     except TypeError:
 
-        print("TypeError en API Olímpica: no se encontró un producto con ID " + str(id_producto))
+        enviar_mensaje_canal_errores(
+            f"TypeError en olimpica_api.py\n"
+            f"No se encontró el producto con ID {str(id_producto)}"
+        )
         return None
 
     except KeyError:
     
-            print("KeyError en API Olímpica: no se encontró un producto con ID " + str(id_producto))
-            return None
+        enviar_mensaje_canal_errores(
+            f"KeyError en olimpica_api.py\n"
+            f"No se encontró el producto con ID {str(id_producto)}"
+        )
+        return None
