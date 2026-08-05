@@ -36,7 +36,7 @@ class CruzVerdeClient:
             wait_until="networkidle"
         )
 
-        self.page.wait_for_timeout(5000)
+        #self.page.wait_for_timeout(5000)
 
     def cerrar(self):
         """Cierra el navegador."""
