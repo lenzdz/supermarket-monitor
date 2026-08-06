@@ -108,7 +108,7 @@ def info_producto_farmatodo(id_producto):
     precio_hoy = producto["offerPrice"]
 
     # Si no existe descuento, offerPrice suele ser igual al precio pleno.
-    if precio_hoy < precio_pleno:
+    if precio_hoy < precio_pleno and precio_hoy != 0:
         precio_con_descuento = precio_hoy
     else:
         precio_con_descuento = None
