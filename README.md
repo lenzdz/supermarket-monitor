@@ -44,6 +44,8 @@ olimpica-monitor/
 
 💊 Farmatodo
 
+💊 La Rebaja
+
 ## Funcionamiento
 
 Cada tienda cuenta con un cliente independiente encargado de consultar su API o página web y normalizar la información obtenida.
