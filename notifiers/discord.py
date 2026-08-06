@@ -5,6 +5,7 @@ from config import JUMBO_DISCORD_WEBHOOK
 from config import CRUZVERDE_DISCORD_WEBHOOK
 from config import FARMATODO_DISCORD_WEBHOOK
 from config import MAKRO_DISCORD_WEBHOOK
+from config import LAREBAJA_DISCORD_WEBHOOK
 from config import ERRORS_DISCORD_WEBHOOK
 
 def enviar_mensaje_canal_olimpica(texto):
@@ -47,6 +48,15 @@ def enviar_mensaje_canal_makro(texto):
 
     requests.post(
         MAKRO_DISCORD_WEBHOOK,
+        json={
+            "content": texto
+        }
+    )
+
+def enviar_mensaje_canal_larebaja(texto):
+
+    requests.post(
+        LAREBAJA_DISCORD_WEBHOOK,
         json={
             "content": texto
         }

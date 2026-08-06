@@ -35,6 +35,7 @@ jobs:
           CRUZVERDE_DISCORD_WEBHOOK: ${{ secrets.CRUZVERDE_DISCORD_WEBHOOK }}
           FARMATODO_DISCORD_WEBHOOK: ${{ secrets.FARMATODO_DISCORD_WEBHOOK }}
           MAKRO_DISCORD_WEBHOOK: ${{ secrets.MAKRO_DISCORD_WEBHOOK }}
+          LAREBAJA_DISCORD_WEBHOOK: ${{ secrets.LAREBAJA_DISCORD_WEBHOOK }}
           ERRORS_DISCORD_WEBHOOK: ${{ secrets.ERRORS_DISCORD_WEBHOOK }}
         run: |
           python main.py
