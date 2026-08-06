@@ -33,7 +33,7 @@ class CruzVerdeClient:
         # Crear la sesión una sola vez
         self.page.goto(
             "https://www.cruzverde.com.co/",
-            wait_until="networkidle"
+            #wait_until="networkidle"
         )
 
         #self.page.wait_for_timeout(5000)
