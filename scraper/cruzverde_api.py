@@ -1,13 +1,13 @@
-"""
-scraper/cruzverde_api.py
+from playwright.sync_api import (
+    sync_playwright,
+    TimeoutError as PlaywrightTimeoutError
+)
 
-Cliente para consultar la API de Cruz Verde.
-"""
-
-from playwright.sync_api import sync_playwright
+from notifiers.discord import enviar_mensaje_canal_errores
 
 
 class CruzVerdeClient:
+
     API_URL = "https://api.cruzverde.com.co/product-service/products/detail"
 
     def __init__(self, headless=True):
@@ -20,23 +20,43 @@ class CruzVerdeClient:
     def iniciar(self):
         """Inicia Playwright y crea la sesión de Cruz Verde."""
 
-        self.playwright = sync_playwright().start()
+        try:
 
-        self.browser = self.playwright.chromium.launch(
-            headless=self.headless
-        )
+            self.playwright = sync_playwright().start()
 
-        self.context = self.browser.new_context()
+            self.browser = self.playwright.chromium.launch(
+                headless=self.headless
+            )
 
-        self.page = self.context.new_page()
+            self.context = self.browser.new_context()
 
-        # Crear la sesión una sola vez
-        self.page.goto(
-            "https://www.cruzverde.com.co/",
-            #wait_until="networkidle"
-        )
+            self.page = self.context.new_page()
 
-        #self.page.wait_for_timeout(5000)
+            self.page.goto(
+                "https://www.cruzverde.com.co/",
+                wait_until="domcontentloaded",
+                timeout=60000
+            )
+
+            self.page.wait_for_timeout(3000)
+
+        except PlaywrightTimeoutError:
+
+            enviar_mensaje_canal_errores(
+                "Timeout al iniciar la sesión de Cruz Verde."
+            )
+
+            self.cerrar()
+            raise
+
+        except Exception as e:
+
+            enviar_mensaje_canal_errores(
+                f"Error iniciando Cruz Verde:\n{e}"
+            )
+
+            self.cerrar()
+            raise
 
     def cerrar(self):
         """Cierra el navegador."""
@@ -54,45 +74,60 @@ class CruzVerdeClient:
     ):
         """
         Consulta un producto en la API de Cruz Verde.
-
-        Parámetros
-        ----------
-        producto_id : str
-            Ejemplo:
-            COCV_146476
-
-        inventory_id : str
-            Zona de inventario.
-
-        Retorna
-        -------
-        dict
-            JSON completo devuelto por la API.
         """
 
-        respuesta = self.context.request.get(
-            f"{self.API_URL}/{producto_id}",
-            params={
-                "inventoryId": inventory_id
+        try:
+
+            respuesta = self.context.request.get(
+                f"{self.API_URL}/{producto_id}",
+                params={
+                    "inventoryId": inventory_id
+                },
+                timeout=30000
+            )
+
+            respuesta_json = respuesta.json()
+
+            precios = respuesta_json["productData"]["prices"]
+
+            precio_pleno = precios["price-list-col"]
+
+            precio_con_descuento = precio_pleno
+
+            if "price-sale-col" in precios:
+                precio_con_descuento = precios["price-sale-col"]
+            elif "price-club-col" in precios:
+                precio_con_descuento = precios["price-club-col"]
+
+            informacion_del_producto = {
+                "id": producto_id,
+                "nombre": respuesta_json["productData"]["name"],
+                "precio_pleno": precio_pleno,
+                "precio_con_descuento": precio_con_descuento
             }
-        )
 
-        respuesta_json = respuesta.json()
+            return informacion_del_producto
 
-        precios = respuesta_json["productData"]["prices"]
-        precio_pleno = precios["price-list-col"]
+        except PlaywrightTimeoutError:
 
-        precio_con_descuento = precio_pleno
-        if "price-sale-col" in precios:
-            precio_con_descuento = precios["price-sale-col"]
-        elif "price-club-col" in precios:
-            precio_con_descuento = precios["price-club-col"]
+            enviar_mensaje_canal_errores(
+                f"Timeout consultando el producto {producto_id} en Cruz Verde."
+            )
 
-        informacion_del_producto = {
-            "id": producto_id,
-            "nombre": respuesta_json["productData"]["name"],
-            "precio_pleno": precio_pleno,
-            "precio_con_descuento": precio_con_descuento
-        }
+            return None
 
-        return informacion_del_producto
+        except KeyError:
+
+            enviar_mensaje_canal_errores(
+                f"Respuesta inesperada para el producto {producto_id} en Cruz Verde."
+            )
+
+            return None
+
+        except Exception as e:
+
+            enviar_mensaje_canal_errores(
+                f"Error consultando el producto {producto_id} en Cruz Verde:\n{e}"
+            )
+
+            return None

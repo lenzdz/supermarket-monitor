@@ -30,22 +30,24 @@ def monitor_cruzverde():
                 producto_id = producto["id"]
             )
 
-            registros.append(registro)
+            if registro != None:
 
-            nombre = registro["nombre"]
-            precio_pleno = registro["precio_pleno"]
-            precio_con_descuento = registro["precio_con_descuento"]
+                registros.append(registro)
 
-            mensaje += (
-                    f"-------------------------------------------\n"
-                    f"{producto['emoji']} **{nombre}**\n"
-                    f"**Precio normal:** ${precio_pleno:,.0f}\n"
-                    f"**Club Cruz Verde:** ${precio_con_descuento:,.0f}\n"
-                )
+                nombre = registro["nombre"]
+                precio_pleno = registro["precio_pleno"]
+                precio_con_descuento = registro["precio_con_descuento"]
 
-            mensaje += comparacion_cruzverde_a_olimpica(producto["id"], precio_con_descuento)
-            
-            enviar_mensaje_canal_cruzverde(mensaje)
+                mensaje += (
+                        f"-------------------------------------------\n"
+                        f"{producto['emoji']} **{nombre}**\n"
+                        f"**Precio normal:** ${precio_pleno:,.0f}\n"
+                        f"**Club Cruz Verde:** ${precio_con_descuento:,.0f}\n"
+                    )
+
+                mensaje += comparacion_cruzverde_a_olimpica(producto["id"], precio_con_descuento)
+                
+                enviar_mensaje_canal_cruzverde(mensaje)
 
         if (len(registros) == 0):
             mensaje_final = f"-------------------------------------------\n Hoy no hay productos en oferta 🙁"
