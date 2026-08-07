@@ -10,12 +10,11 @@ from services.monitor_larebaja import monitor_larebaja
 
 from notifiers.discord import enviar_mensaje_canal_errores
 
-diccionario_productos_cruzverde = {}
-#diccionario_productos_cruzverde = monitor_cruzverde()
-#monitor_olimpica(diccionario_productos_cruzverde)
-#monitor_jumbo()
+diccionario_productos_cruzverde = monitor_cruzverde()
+monitor_olimpica(diccionario_productos_cruzverde)
+monitor_jumbo()
 monitor_farmatodo(diccionario_productos_cruzverde)
-#monitor_makro()
-#monitor_larebaja(diccionario_productos_cruzverde)
+monitor_makro()
+monitor_larebaja(diccionario_productos_cruzverde)
 
 print("Fin ejecución.")
