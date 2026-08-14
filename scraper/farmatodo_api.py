@@ -6,6 +6,8 @@ Cliente para consultar la API de Farmatodo.
 
 import requests
 
+from notifiers.discord import enviar_mensaje_canal_errores
+
 
 BASE_URL = (
     "https://gw-backend.farmatodo.com/ah/api/productEndpoint/v2/getItem"
@@ -64,17 +66,62 @@ def obtener_producto(
         "ipaddress": "179.19.83.254",
     }
 
-    respuesta = requests.get(
-        BASE_URL,
-        params=params,
-        headers=headers,
-        timeout=20,
-    )
+    try:
 
-    # print(respuesta.raise_for_status())
-    # print(respuesta.json())
+        respuesta = requests.get(
+            BASE_URL,
+            params=params,
+            headers=headers,
+            timeout=20,
+        )
 
-    return respuesta.json()
+        # print(respuesta.raise_for_status())
+        # print(respuesta.json())
+
+        if not respuesta.ok:
+
+            enviar_mensaje_canal_errores(
+                f"Error HTTP {respuesta.status_code} en Farmatodo API\n"
+                f"Producto: {id_producto}\n"
+                f"Respuesta: {respuesta.text[:500]}"
+            )
+
+            return None
+
+        try:
+
+            return respuesta.json()
+
+        except requests.exceptions.JSONDecodeError:
+
+            enviar_mensaje_canal_errores(
+                f"Farmatodo no devolvió JSON válido\n"
+                f"Producto: {id_producto}\n"
+                f"Status: {respuesta.status_code}\n"
+                f"Content-Type: {respuesta.headers.get('Content-Type')}\n"
+                f"Respuesta: {respuesta.text[:500]}"
+            )
+
+            return None
+
+    except requests.exceptions.Timeout:
+
+        enviar_mensaje_canal_errores(
+            f"Timeout de 20 segundos consultando Farmatodo\n"
+            f"Producto: {id_producto}"
+        )
+
+        return None
+
+    except requests.exceptions.RequestException as e:
+
+        enviar_mensaje_canal_errores(
+            f"Error de conexión consultando Farmatodo\n"
+            f"Producto: {id_producto}\n"
+            f"Error: {e}"
+        )
+
+        return None
 
 
 def info_producto_farmatodo(id_producto):
@@ -90,40 +137,52 @@ def info_producto_farmatodo(id_producto):
             "precio_pleno",
             "precio_hoy",
             "precio_con_descuento",
-            "descuento",
-            "descripcion_descuento",
-            "stock"
         }
     """
 
     respuesta = obtener_producto(id_producto)
 
-    producto = (
-        respuesta["itemSection"][0]
-                 ["list"][0]
-                 ["product"][0]
-    )
+    # La API falló o no devolvió JSON válido.
+    if respuesta is None:
+        return None
 
-    precio_pleno = producto["fullPrice"]
-    precio_hoy = producto["offerPrice"]
+    try:
 
-    # Si no existe descuento, offerPrice suele ser igual al precio pleno.
-    if precio_hoy < precio_pleno and precio_hoy != 0:
-        precio_con_descuento = precio_hoy
-    else:
-        precio_con_descuento = None
+        producto = (
+            respuesta["itemSection"][0]
+                     ["list"][0]
+                     ["product"][0]
+        )
 
-    if precio_con_descuento != None:
+        precio_pleno = producto["fullPrice"]
+        precio_hoy = producto["offerPrice"]
 
-        informacion_producto = {
-            "id": producto["id"],
-            "nombre": producto["mediaDescription"],
-            "precio_pleno": precio_pleno,
-            "precio_hoy": precio_hoy,
-            "precio_con_descuento": precio_con_descuento
-        }
+        # Si no existe descuento, offerPrice suele ser
+        # igual al precio pleno.
+        if precio_hoy < precio_pleno and precio_hoy != 0:
+            precio_con_descuento = precio_hoy
+        else:
+            precio_con_descuento = None
 
-        return informacion_producto
+        if precio_con_descuento is not None:
+            informacion_producto = {
+                "id": producto["id"],
+                "nombre": producto["mediaDescription"],
+                "precio_pleno": precio_pleno,
+                "precio_hoy": precio_hoy,
+                "precio_con_descuento": precio_con_descuento
+            }
 
-    else:
+            return informacion_producto
+
+        else:
+            return None
+
+    except (KeyError, IndexError, TypeError):
+
+        enviar_mensaje_canal_errores(
+            f"Respuesta inesperada de Farmatodo\n"
+            f"Producto: {id_producto}"
+        )
+
         return None
