@@ -2,6 +2,8 @@ import base64
 import json
 import requests
 
+from notifiers.discord import enviar_mensaje_canal_errores
+
 # BASE_URL = "https://www.jumbocolombia.com/_v/segment/graphql/v1"
 
 
@@ -128,7 +130,7 @@ def obtener_producto(product_id):
 
     return respuesta.json()
 
-def obtener_descuento(info_producto):
+def obtener_descuento(id_producto, info_producto):
     precio_pleno = info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["Price"]
 
     try:
@@ -140,6 +142,7 @@ def obtener_descuento(info_producto):
             return None
 
         return cards[0]["finalPrice"]
+    
     except KeyError:
         teasers = (
                 info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["teasers"]
@@ -150,14 +153,14 @@ def obtener_descuento(info_producto):
 
         # Precio con descuento, si hay
         descuento = info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["teasers"][0]["effects"]["parameters"][0]["value"]
-        precio_con_descuento = int(precio_pleno - ((precio_pleno*int(descuento))/100))
+        precio_con_descuento = int(precio_pleno - ((precio_pleno*float(descuento))/100))
 
         return precio_con_descuento
 
 def info_producto_jumbo(id_producto):
     info_producto_desde_api = obtener_producto(id_producto)
 
-    precio_con_descuento = obtener_descuento(info_producto_desde_api)
+    precio_con_descuento = obtener_descuento(id_producto, info_producto_desde_api)
 
     # Nombre del producto
     nombre_del_producto = str(info_producto_desde_api["data"]["product"]["productName"]).title()
