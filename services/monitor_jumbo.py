@@ -7,6 +7,7 @@ from scraper.jumbo_api import info_producto_jumbo
 from services.monitor_comparables import comparacion_jumbo_a_olimpica
 
 from notifiers.discord import enviar_mensaje_canal_jumbo
+from notifiers.discord import enviar_mensaje_canal_errores
 
 fecha_hoy = datetime.now().strftime("%d/%m/%Y")
 
@@ -70,10 +71,19 @@ def revisar_producto_jumbo(id_producto):
 
     datos_producto = info_producto_jumbo(id_producto)
 
-    if datos_producto["precio_hoy"] < datos_producto["precio_pleno"]:
-        return datos_producto
-    elif (datos_producto["precio_con_descuento"] != None) and (datos_producto["precio_con_descuento"] < datos_producto["precio_pleno"]):
-        return datos_producto
-    
-    # Para ver todos los productos en la base de datos, devolver datos_producto
-    return None
+    try: 
+        
+        if datos_producto["precio_hoy"] < datos_producto["precio_pleno"]:
+            return datos_producto
+        elif (datos_producto["precio_con_descuento"] != None) and (datos_producto["precio_con_descuento"] < datos_producto["precio_pleno"]):
+            return datos_producto
+        
+        # Para ver todos los productos en la base de datos, devolver datos_producto
+        return None
+
+    except Exception as e:
+        enviar_mensaje_canal_errores(
+            f"Error en Monitor Jumbo para producto {id_producto}: {type(e).__name__}: {e}"
+        )
+
+        return None

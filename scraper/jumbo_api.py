@@ -131,52 +131,69 @@ def obtener_producto(product_id):
     return respuesta.json()
 
 def obtener_descuento(id_producto, info_producto):
-    precio_pleno = info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["Price"]
-
     try:
-        cards = (
-            info_producto["data"]["getProduct"]["product"]["cards"]
+        precio_pleno = info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["Price"]
+
+        try:
+            cards = (
+                info_producto["data"]["getProduct"]["product"]["cards"]
+            )
+    
+            if not cards:
+                return None
+    
+            return cards[0]["finalPrice"]
+        
+        except KeyError:
+            teasers = (
+                    info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["teasers"]
+                )
+    
+            if not teasers:
+                return None
+    
+            # Precio con descuento, si hay
+            descuento = info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["teasers"][0]["effects"]["parameters"][0]["value"]
+            precio_con_descuento = int(precio_pleno - ((precio_pleno*float(descuento))/100))
+    
+            return precio_con_descuento
+        
+    except Exception as e:
+        enviar_mensaje_canal_errores(
+            f"Error en API Jumbo para producto {id_producto}: {type(e).__name__}: {e}"
         )
 
-        if not cards:
-            return None
-
-        return cards[0]["finalPrice"]
-    
-    except KeyError:
-        teasers = (
-                info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["teasers"]
-            )
-
-        if not teasers:
-            return None
-
-        # Precio con descuento, si hay
-        descuento = info_producto["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["teasers"][0]["effects"]["parameters"][0]["value"]
-        precio_con_descuento = int(precio_pleno - ((precio_pleno*float(descuento))/100))
-
-        return precio_con_descuento
+        return None
 
 def info_producto_jumbo(id_producto):
     info_producto_desde_api = obtener_producto(id_producto)
 
     precio_con_descuento = obtener_descuento(id_producto, info_producto_desde_api)
 
-    # Nombre del producto
-    nombre_del_producto = str(info_producto_desde_api["data"]["product"]["productName"]).title()
+    try: 
 
-    # Precio pleno del producto
-    precio_pleno = info_producto_desde_api["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["ListPrice"]
+        # Nombre del producto
+        nombre_del_producto = str(info_producto_desde_api["data"]["product"]["productName"]).title()
 
-    # Precio de hoy del producto (puede ser pleno o tener descuento para todos los medios de pago)
-    precio_hoy = info_producto_desde_api["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["Price"]
+        # Precio pleno del producto
+        precio_pleno = info_producto_desde_api["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["ListPrice"]
 
-    informacion_del_producto = {
-        "id": id_producto,
-        "nombre": nombre_del_producto,
-        "precio_pleno": precio_pleno,
-        "precio_hoy": precio_hoy,
-        "precio_con_descuento": precio_con_descuento
-    }
+        # Precio de hoy del producto (puede ser pleno o tener descuento para todos los medios de pago)
+        precio_hoy = info_producto_desde_api["data"]["product"]["items"][0]["sellers"][0]["commertialOffer"]["Price"]
 
-    return informacion_del_producto
+        informacion_del_producto = {
+            "id": id_producto,
+            "nombre": nombre_del_producto,
+            "precio_pleno": precio_pleno,
+            "precio_hoy": precio_hoy,
+            "precio_con_descuento": precio_con_descuento
+        }
+
+        return informacion_del_producto
+
+    except Exception as e:
+            enviar_mensaje_canal_errores(
+                f"Error en API Jumbo para producto {id_producto}: {type(e).__name__}: {e}"
+            )
+    
+            return None
